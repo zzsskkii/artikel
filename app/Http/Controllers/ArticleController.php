@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreArticleRequest;
-use App\Http\Requests\UpdateArticleRequest;
 use App\Models\Article;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleController extends Controller
 {
     public function index(): JsonResponse
     {
-        $articles = Article::with('category')->get();
+        $articles = Article::with('category', 'reporter')->orderBy('id', 'desc')->get();
 
         return response()->json([
             'success' => true,
@@ -21,9 +21,17 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function store(StoreArticleRequest $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'judul' => 'required|string',
+            'kategori_id' => 'required|integer',
+            'isi' => 'required|string',
+            'foto' => 'nullable|image',
+        ]);
+
+        // Auto-assign reporter from the logged-in user
+        $validated['reporter_id'] = Auth::id() ?? 1;
 
         if ($request->hasFile('foto')) {
             $validated['foto'] = $request->file('foto')->store('articles', 'public');
@@ -40,7 +48,7 @@ class ArticleController extends Controller
 
     public function show(Article $article): JsonResponse
     {
-        $article->load('category');
+        $article->load('category', 'reporter');
         
         return response()->json([
             'success' => true,
@@ -49,9 +57,14 @@ class ArticleController extends Controller
         ]);
     }
 
-    public function update(UpdateArticleRequest $request, Article $article): JsonResponse
+    public function update(Request $request, Article $article): JsonResponse
     {
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'judul' => 'required|string',
+            'kategori_id' => 'required|integer',
+            'isi' => 'required|string',
+            'foto' => 'nullable|image',
+        ]);
 
         if ($request->hasFile('foto')) {
             if ($article->foto && Storage::disk('public')->exists($article->foto)) {

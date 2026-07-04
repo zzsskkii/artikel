@@ -1,0 +1,63 @@
+body {
+    font-family: sans-serif;
+    margin: 2rem;
+    color: #333;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+th, td {
+    border: 1px solid #aaa;
+    padding: 0.5rem;
+    text-align: left;
+}
+th {
+    background-color: #eee;
+}
+button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 2rem;
+    border: 1px solid #000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    z-index: 100;
+    width: 400px;
+}
+.modal.active {
+    display: block;
+}
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    z-index: 90;
+}
+.overlay.active {
+    display: block;
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+.form-group label {
+    display: block;
+    font-weight: bold;
+}
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+}
+img.thumb {
+    width: 80px;
+}
