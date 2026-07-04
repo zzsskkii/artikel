@@ -37,6 +37,8 @@
             </div>
             <button type="submit">Masuk</button>
         </form>
+
+        <a href="{{ url('/register') }}" style="display: block; text-align: center; margin-top: 1.5rem; text-decoration: none; color: #2563eb; font-size: 0.9rem;">Belum punya akun? Daftar di sini</a>
     </div>
 </body>
 </html>

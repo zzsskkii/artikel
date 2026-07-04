@@ -36,4 +36,27 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
         return redirect('/');
     }
+
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    public function register(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:reporter',
+            'email' => 'required|string|email|max:255|unique:reporter',
+            'password' => 'required|string|min:6',
+        ]);
+
+        $validated['password'] = \Illuminate\Support\Facades\Hash::make($validated['password']);
+
+        $reporter = \App\Models\Reporter::create($validated);
+
+        Auth::login($reporter);
+
+        return redirect('/admin');
+    }
 }
