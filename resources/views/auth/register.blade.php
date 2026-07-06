@@ -39,6 +39,14 @@
                 <input type="text" name="nama" value="{{ old('nama') }}" required>
             </div>
             <div class="form-group">
+                <label>Tanggal Lahir</label>
+                <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
+            </div>
+            <div class="form-group">
+                <label>Alamat</label>
+                <input type="text" name="alamat" value="{{ old('alamat') }}" required>
+            </div>
+            <div class="form-group">
                 <label>Username</label>
                 <input type="text" name="username" value="{{ old('username') }}" required>
             </div>

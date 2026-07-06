@@ -12,7 +12,96 @@ const overlay = document.getElementById('overlay');
 const form = document.getElementById('articleForm');
 const modalTitle = document.getElementById('modalTitle');
 
-document.addEventListener('DOMContentLoaded', fetchArticles);
+document.addEventListener('DOMContentLoaded', () => {
+    fetchArticles();
+    if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'admin') {
+        fetchReporters();
+    }
+});
+
+window.showTab = function(tab) {
+    if (tab === 'articles') {
+        document.getElementById('articlesSection').style.display = 'block';
+        document.getElementById('reportersSection').style.display = 'none';
+        document.getElementById('btnTabArticles').style.background = '#2563eb';
+        document.getElementById('btnTabArticles').style.color = 'white';
+        document.getElementById('btnTabReporters').style.background = '#ccc';
+        document.getElementById('btnTabReporters').style.color = 'black';
+    } else {
+        document.getElementById('articlesSection').style.display = 'none';
+        document.getElementById('reportersSection').style.display = 'block';
+        document.getElementById('btnTabArticles').style.background = '#ccc';
+        document.getElementById('btnTabArticles').style.color = 'black';
+        document.getElementById('btnTabReporters').style.background = '#2563eb';
+        document.getElementById('btnTabReporters').style.color = 'white';
+    }
+};
+
+let reporters = [];
+async function fetchReporters() {
+    const statusReporters = document.getElementById('statusReporters');
+    const tableRep = document.getElementById('reporterTable');
+    try {
+        const res = await fetch('/api/reporters');
+        const json = await res.json();
+        reporters = json.data || [];
+        
+        const tbodyRep = document.getElementById('tableBodyReporters');
+        tbodyRep.innerHTML = '';
+        if(reporters.length === 0) {
+            tbodyRep.innerHTML = '<tr><td colspan="6">Tidak ada reporter.</td></tr>';
+        } else {
+            reporters.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${r.nama}</td>
+                    <td>${r.username}</td>
+                    <td>${r.email}</td>
+                    <td>${r.tanggal_lahir || '-'}</td>
+                    <td>${r.umur || '-'}</td>
+                    <td>${r.alamat || '-'}</td>
+                    <td><button onclick="filterArticlesByReporter('${r.nama}')">Lihat Pekerjaan</button></td>
+                `;
+                tbodyRep.appendChild(tr);
+            });
+        }
+        statusReporters.style.display = 'none';
+        tableRep.style.display = 'table';
+    } catch (e) {
+        statusReporters.textContent = 'Error loading reporters.';
+    }
+}
+
+window.filterArticlesByReporter = function(reporterName) {
+    showTab('articles');
+    
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(row => {
+        const reporterCell = row.cells[4];
+        if (reporterCell && reporterCell.textContent === reporterName) {
+            row.style.display = '';
+        } else if (reporterCell) {
+            row.style.display = 'none';
+        }
+    });
+
+    let statusFilter = document.getElementById('statusFilter');
+    if (!statusFilter) {
+        statusFilter = document.createElement('div');
+        statusFilter.id = 'statusFilter';
+        statusFilter.style.marginBottom = '1rem';
+        statusFilter.style.color = '#2563eb';
+        document.getElementById('articlesSection').insertBefore(statusFilter, document.getElementById('articleTable'));
+    }
+    statusFilter.innerHTML = `Menampilkan artikel oleh: <b>${reporterName}</b> <button onclick="resetFilter()" style="margin-left: 10px; padding: 0.2rem 0.5rem; font-size: 0.8rem;">Tampilkan Semua</button>`;
+};
+
+window.resetFilter = function() {
+    const rows = tbody.querySelectorAll('tr');
+    rows.forEach(row => row.style.display = '');
+    const statusFilter = document.getElementById('statusFilter');
+    if (statusFilter) statusFilter.innerHTML = '';
+};
 
 async function fetchArticles() {
     statusDiv.textContent = 'Loading...';
@@ -37,14 +126,15 @@ function render() {
     articles.forEach(a => {
         const tr = document.createElement('tr');
         const img = a.foto ? `<img src="${STORAGE_URL}${a.foto}" class="thumb">` : 'Tidak ada foto';
-        const cat = a.category ? a.category.nama : a.kategori_id;
+        const cat = a.category ? a.category.name_categori : a.kategori_id;
+        const rep = a.reporter ? a.reporter.nama : a.reporter_id;
         
         tr.innerHTML = `
             <td>${img}</td>
             <td>${a.judul}</td>
             <td>${cat}</td>
             <td>${a.posisi || '-'}</td>
-            <td>${a.reporter}</td>
+            <td>${rep}</td>
             <td>
                 <a href="/berita/${a.id}" target="_blank" style="text-decoration:none;">
                     <button type="button">Lihat</button>
@@ -79,9 +169,9 @@ window.edit = function(id) {
     if(!a) return;
     editingId = id;
     document.getElementById('judul').value = a.judul;
-    document.getElementById('kategori_id').value = a.kategori_id;
+    document.getElementById('kategori_nama').value = a.category ? a.category.name_categori : '';
     document.getElementById('posisi').value = a.posisi || '';
-    document.getElementById('reporter').value = a.reporter;
+    document.getElementById('reporter').value = a.reporter ? a.reporter.id : (a.reporter_id || '');
     document.getElementById('isi').value = a.isi;
     openModal(true);
 };

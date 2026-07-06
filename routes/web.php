@@ -20,9 +20,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Admin Dashboard (Protected)
 Route::middleware('auth')->group(function () {
     Route::get('/admin', function () {
-        return view('welcome'); // the simple table SPA we built earlier
+        return view('welcome', ['categories' => \App\Models\Category::all()]); // the simple table SPA we built earlier
     });
     
     // API endpoints moved to web to easily share session auth
     Route::apiResource('api/articles', ArticleController::class);
+    Route::get('api/reporters', [\App\Http\Controllers\ReporterController::class, 'index']);
 });
