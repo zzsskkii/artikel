@@ -21,7 +21,7 @@
     <script>
         const USER_ROLE = '{{ auth()->user()->role }}';
     </script>
-    
+
     @if(auth()->user()->role === 'admin')
         <div style="margin-bottom: 1rem;">
             <button onclick="showTab('articles')" id="btnTabArticles">Kelola Artikel</button>
@@ -57,9 +57,6 @@
                     <th>Nama</th>
                     <th>Username</th>
                     <th>Email</th>
-                    <th>Tanggal Lahir</th>
-                    <th>Umur</th>
-                    <th>Alamat</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -70,7 +67,7 @@
     @endif
 
     <div id="overlay" class="overlay" onclick="closeModal()"></div>
-    
+
     <div id="modal" class="modal">
         <h2 id="modalTitle">Tambah Artikel</h2>
         <form id="articleForm">

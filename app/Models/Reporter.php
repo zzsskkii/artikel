@@ -11,9 +11,6 @@ class Reporter extends Authenticatable
 
     protected $fillable = [
         'nama',
-        'umur',
-        'alamat',
-        'tanggal_lahir',
         'username',
         'email',
         'password',
