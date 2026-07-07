@@ -46,8 +46,6 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'tanggal_lahir' => 'required|date',
-            'alamat' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:reporter',
             'email' => 'required|string|email|max:255|unique:reporter',
             'password' => 'required|string|min:6',

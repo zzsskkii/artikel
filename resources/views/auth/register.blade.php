@@ -21,7 +21,7 @@
 <body>
     <div class="register-box">
         <h2>Buat Akun Reporter</h2>
-        
+
         @if($errors->any())
             <div class="error">
                 <ul>
@@ -37,14 +37,6 @@
             <div class="form-group">
                 <label>Nama Lengkap</label>
                 <input type="text" name="nama" value="{{ old('nama') }}" required>
-            </div>
-            <div class="form-group">
-                <label>Tanggal Lahir</label>
-                <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}" required>
-            </div>
-            <div class="form-group">
-                <label>Alamat</label>
-                <input type="text" name="alamat" value="{{ old('alamat') }}" required>
             </div>
             <div class="form-group">
                 <label>Username</label>

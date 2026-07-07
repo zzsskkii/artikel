@@ -17,6 +17,7 @@ class Article extends Model
         'judul',
         'isi',
         'foto',
+        'posisi',
         'reporter_id',
         'kategori_id',
         'lokasi_id'

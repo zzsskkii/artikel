@@ -1,24 +1,22 @@
 @extends('public.layout')
 
 @section('content')
-
-    <div style="margin-bottom: 2rem;">
+    <div class="card">
         <h2>{{ $article->judul }}</h2>
-        
-        <p style="color: #666; border-bottom: 1px dashed #ccc; padding-bottom: 1rem;">
-            Kategori: <strong>{{ $article->category ? $article->category->name_categori : 'Uncategorized' }}</strong> | 
+
+        <div class="meta" style="border-bottom:1px solid #e2e8f0; padding-bottom:10px; margin-bottom:12px;">
+            Kategori: <strong>{{ $article->category ? $article->category->name_categori : 'Uncategorized' }}</strong> |
             Penulis: {{ $article->reporter ? $article->reporter->nama : 'Unknown' }}
-        </p>
+        </div>
 
         @if($article->foto)
-            <img src="{{ asset('storage/' . $article->foto) }}" alt="Foto Utama" style="max-width: 100%; height: auto; margin-bottom: 1rem;">
+            <img src="{{ asset('storage/' . $article->foto) }}" alt="Foto Utama" style="max-width: 100%; height: auto; border-radius: 12px; margin-bottom: 14px;">
         @endif
 
-        <div>
+        <div style="line-height: 1.7; color:#334155;">
             {!! nl2br(e($article->isi)) !!}
         </div>
+
+        <a href="{{ url('/') }}" class="btn">&laquo; Kembali ke Beranda</a>
     </div>
-
-    <a href="{{ url('/') }}">&laquo; Kembali ke Beranda</a>
-
 @endsection
