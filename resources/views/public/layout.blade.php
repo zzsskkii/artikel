@@ -33,11 +33,7 @@
 
         <nav>
             <a href="{{ url('/') }}">Beranda</a>
-            <a href="{{ url('/kategori/1') }}">Politik</a>
-            <a href="{{ url('/kategori/2') }}">Ekonomi & Bisnis</a>
-            <a href="{{ url('/kategori/3') }}">Sosial & Budaya</a>
-            <a href="{{ url('/kategori/4') }}">Sains & Teknologi</a>
-            <a href="{{ url('/kategori/5') }}">Internasional</a>
+            @include('public._nav_categories')
             <a href="{{ url('/admin') }}" class="btn btn-primary">Login / Admin</a>
         </nav>
 
