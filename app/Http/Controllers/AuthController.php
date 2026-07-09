@@ -21,7 +21,11 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/admin');
+            
+            if (Auth::user()->role === 'admin') {
+                return redirect()->intended('/admin');
+            }
+            return redirect()->intended('/reporter');
         }
 
         return back()->withErrors([
@@ -57,6 +61,9 @@ class AuthController extends Controller
 
         Auth::login($reporter);
 
-        return redirect('/admin');
+        if ($reporter->role === 'admin') {
+            return redirect('/admin');
+        }
+        return redirect('/reporter');
     }
 }

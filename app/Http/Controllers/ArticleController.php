@@ -16,6 +16,7 @@ class ArticleController extends Controller
         $user = Auth::user();
         $query = Article::with('category', 'reporter')->orderBy('id', 'desc');
         
+        
         if ($user && $user->role !== 'admin') {
             $query->where('reporter_id', $user->id);
         }

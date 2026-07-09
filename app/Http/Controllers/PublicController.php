@@ -4,12 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use App\Models\Category;
+use Illuminate\Http\Request;
 
 class PublicController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $articles = Article::with('category', 'reporter')->orderBy('id', 'desc')->get();
+        $query = Article::with('category', 'reporter')->orderBy('id', 'desc');
+        
+        if ($request->filled('q')) {
+            $query->where('judul', 'like', '%' . $request->q . '%')
+                  ->orWhere('isi', 'like', '%' . $request->q . '%');
+        }
+        
+        $articles = $query->get();
         $categories = Category::all();
         return view('public.home', compact('articles', 'categories'));
     }

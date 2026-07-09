@@ -20,7 +20,13 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Admin Dashboard (Protected)
 Route::middleware('auth')->group(function () {
     Route::get('/admin', function () {
-        return view('welcome', ['categories' => \App\Models\Category::all()]); // the simple table SPA we built earlier
+        if (auth()->user()->role !== 'admin') return redirect('/reporter');
+        return view('welcome', ['categories' => \App\Models\Category::all()]);
+    });
+
+    Route::get('/reporter', function () {
+        if (auth()->user()->role !== 'reporter') return redirect('/admin');
+        return view('welcome', ['categories' => \App\Models\Category::all()]);
     });
     
     // API endpoints moved to web to easily share session auth
