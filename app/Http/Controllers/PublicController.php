@@ -17,23 +17,27 @@ class PublicController extends Controller
                   ->orWhere('isi', 'like', '%' . $request->q . '%');
         }
         
-        $articles = $query->get();
+        $articles = $query->paginate(6)->withQueryString();
         $categories = Category::all();
-        return view('public.home', compact('articles', 'categories'));
+        $popularArticles = Article::with('category')->orderBy('views', 'desc')->take(5)->get();
+        return view('public.home', compact('articles', 'categories', 'popularArticles'));
     }
 
     public function category($id)
     {
         $category = Category::findOrFail($id);
-        $articles = Article::with('category', 'reporter')->where('kategori_id', $id)->orderBy('id', 'desc')->get();
+        $articles = Article::with('category', 'reporter')->where('kategori_id', $id)->orderBy('id', 'desc')->paginate(6);
         $categories = Category::all();
+        $popularArticles = Article::with('category')->orderBy('views', 'desc')->take(5)->get();
         
-        return view('public.category', compact('category', 'articles', 'categories'));
+        return view('public.category', compact('category', 'articles', 'categories', 'popularArticles'));
     }
 
     public function article($id)
     {
         $article = Article::with('category', 'reporter')->findOrFail($id);
+        $article->increment('views'); // Tambah view count
+        
         $categories = Category::all();
         
         return view('public.article', compact('article', 'categories'));

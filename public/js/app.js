@@ -3,6 +3,7 @@ const STORAGE_URL = '/storage/';
 
 let articles = [];
 let editingId = null;
+let editorInstance = null;
 
 const statusDiv = document.getElementById('status');
 const table = document.getElementById('articleTable');
@@ -16,6 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchArticles();
     if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'admin') {
         fetchReporters();
+    }
+    
+    // Inisialisasi CKEditor
+    if(document.querySelector('#isi')) {
+        ClassicEditor
+            .create(document.querySelector('#isi'))
+            .then(editor => {
+                editorInstance = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
     }
 });
 
@@ -154,6 +167,7 @@ window.openModal = function(isEdit = false) {
         editingId = null;
         form.reset();
         modalTitle.textContent = 'Tambah Artikel';
+        if(editorInstance) editorInstance.setData('');
     } else {
         modalTitle.textContent = 'Edit Artikel';
     }
@@ -173,6 +187,7 @@ window.edit = function(id) {
     document.getElementById('posisi').value = a.posisi || '';
     document.getElementById('reporter').value = a.reporter ? a.reporter.id : (a.reporter_id || '');
     document.getElementById('isi').value = a.isi;
+    if(editorInstance) editorInstance.setData(a.isi || '');
     openModal(true);
 };
 
@@ -191,6 +206,9 @@ window.del = async function(id) {
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if(editorInstance) {
+        document.getElementById('isi').value = editorInstance.getData();
+    }
     const fd = new FormData(form);
     const url = editingId ? `${API_URL}/${editingId}` : API_URL;
     if(editingId) fd.append('_method', 'PUT');

@@ -12,13 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement('ALTER TABLE artikel MODIFY id INT NOT NULL AUTO_INCREMENT PRIMARY KEY');
-        DB::statement('ALTER TABLE artikel MODIFY foto VARCHAR(255) NULL');
-        DB::statement('ALTER TABLE artikel MODIFY lokasi_id INT NULL');
-
-        if (!Schema::hasColumn('artikel', 'posisi')) {
-            DB::statement('ALTER TABLE artikel ADD COLUMN posisi VARCHAR(255) NULL AFTER kategori_id');
-        }
+        // skipped due to errors
     }
 
     /**

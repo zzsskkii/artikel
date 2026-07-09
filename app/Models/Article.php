@@ -20,7 +20,8 @@ class Article extends Model
         'posisi',
         'reporter_id',
         'kategori_id',
-        'lokasi_id'
+        'lokasi_id',
+        'views'
     ];
 
     public function category(): BelongsTo

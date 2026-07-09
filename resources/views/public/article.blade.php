@@ -14,7 +14,7 @@
         @endif
 
         <div style="line-height: 1.7; color:#334155;">
-            {!! nl2br(e($article->isi)) !!}
+            {!! $article->isi !!}
         </div>
 
         <a href="{{ url('/') }}" class="btn">&laquo; Kembali ke Beranda</a>
